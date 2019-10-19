@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>六星即时通讯系统</title>
+
+<link rel="stylesheet" href="./css/style.css" media="screen" type="text/css" />
+</head>
+<body>
+<div id="convo">
+		<ul  class="chat-thread">
+			<!--聊天内容框-->
+			<li>双人位</li>
+		</ul>
+		<!--聊天框-->
+		<div class="chat-window">
+			<input class="chat-window-message" name="chat-window-message" autocomplete="on" placeholder="请输入内容按回车键发送">
+		</div>
+	  <div class="chat-list">
+			  <select>
+				  <option value="all">所有人</option>
+				  <option value="192.168.10.23:9801:1">msx1</option>
+				  <option value="192.168.10.23:9802:2">msx2</option>
+			  </select>
+	   </div>
+</div>
+
+
+<!--引入jq文件-->
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+ <script type="text/javascript">
+     var id=prompt('输入id用于测试');
+     var data;
+     $.ajaxSettings.async = false;
+     $.post('http://192.168.10.23:9600/',{method:'login',id:id},function(result){
+         data=result;
+     },"json");
+
+     ws = new WebSocket('ws://'+data.url+'/Im',[data.token]);  //把token放在了header请求头当中
+	 ws.onopen = function(){
+         console.log("已经打开了websocket连接，可以进行实时通信了");
+         ws.send('{"method":"server_broadcast","msg":"大家好我是'+id+'"}');
+         console.log("进行实时通信了");
+     };
+     ws.onmessage=function (evt) {
+         //添加内容
+         $(".chat-thread").append("<li>"+evt.data+"</li>");
+
+         //滚动条下移到最后
+         $(".chat-thread").scrollTop($('.chat-thread')[0].scrollHeight);
+         console.log("接受到来自服务器端的数据:"+evt.data);
+     }
+     ws.onclose = function(e){
+         alert('服务器关闭');
+     }
+
+     //键按下之后会触发事件
+     $(document).keypress(function(event){
+         //按下的是指定的键，然后才触发动作
+         if(event.keyCode==13){ //按下了回车键
+			 var speak=$('.chat-window-message').val(); //输入框里的值
+             var target=$('.chat-list select').val()
+             ws.send('{"method":"private_chat","target_url":"'+target+'","msg":'+speak+'}');
+
+			 alert(target);
+			// ws.send(name+':'+speak); //消息发送到服务器
+
+             $('.chat-window-message').val(''); //清除文本框内容
+         }
+     });
+
+ </script>
+
+</body>
+
+</html>

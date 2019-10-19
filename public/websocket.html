@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    var id=prompt('输入id用于测试');
+    var data;
+    $.ajaxSettings.async = false;
+    $.post('http://192.168.10.23:9600/',{method:'login',id:id},function(result){
+              data=result;
+    },"json");
+    ws = new WebSocket('ws://'+data.url+'/Im',[data.token]);  //把token放在了header请求头当中
+    ws.onopen = function(){
+        console.log("已经打开了websocket连接，可以进行实时通信了");
+    };
+    ws.onmessage = function(e){
+        console.log("接受到来自服务器端的数据:"+e.data);
+    }
+    ws.onclose = function(e){
+         alert('服务器关闭');
+    }
+</script>
+</body>
+</html>
