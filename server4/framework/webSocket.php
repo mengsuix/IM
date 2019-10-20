@@ -18,7 +18,7 @@ class webSocket
     protected $table;
     protected $ip = [
         'ip' => '192.168.10.23',
-        'port' => 9801
+        'port' => 9804
     ];
 
     public function run()
@@ -27,7 +27,7 @@ class webSocket
         $this->table->column('fd', Table::TYPE_INT);
         $this->table->column('uid', Table::TYPE_INT);
         $this->table->create();
-        $server = new \Swoole\WebSocket\Server('0.0.0.0', 9801);
+        $server = new \Swoole\WebSocket\Server('0.0.0.0', 9804);
         $server->set([
             'worker_num' => 2
         ]);

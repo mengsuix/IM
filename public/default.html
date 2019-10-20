@@ -35,7 +35,7 @@
      $.post('http://192.168.10.23:9600/',{method:'login',id:id},function(result){
          data=result;
      },"json");
-
+	 console.log(data);
      ws = new WebSocket('ws://'+data.url+'/Im',[data.token]);  //把token放在了header请求头当中
 	 ws.onopen = function(){
          console.log("已经打开了websocket连接，可以进行实时通信了");

@@ -48,6 +48,26 @@ class route
                     }
                 }, $this->server, $this->redis, $frame->fd, $serviceKey, $serviceVal);
                 break;
+            case 'route_broadcast':
+                $routeData = $data['target_server'];
+                foreach ($routeData as $value) {
+                    $value = json_decode($value, true);
+                    $serverSendData = [
+                        'method' => 'route_broadcast',
+                        'msg' => '去广播'
+                    ];
+                    go(function () use ($value, $serverSendData) {
+                        $cli = new \Swoole\Coroutine\Http\Client($value['ip'], $value['port']);
+                        $token = $this->issue(0, '192.168.10.23:9600');
+                        $cli->setHeaders(['sec-websocket-protocol'=>$token]);
+                        $result = $cli->upgrade("/");
+                        if ($result) {
+                            $cli->push(json_encode($serverSendData));
+                            $cli->close();
+                        }
+                    });
+                }
+                break;
         }
     }
 
