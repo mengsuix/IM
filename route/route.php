@@ -54,7 +54,7 @@ class route
                     $value = json_decode($value, true);
                     $serverSendData = [
                         'method' => 'route_broadcast',
-                        'msg' => '去广播'
+                        'msg' => $data['msg']
                     ];
                     go(function () use ($value, $serverSendData) {
                         $cli = new \Swoole\Coroutine\Http\Client($value['ip'], $value['port']);

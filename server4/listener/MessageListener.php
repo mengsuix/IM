@@ -24,7 +24,8 @@ class MessageListener
                 }
                 $routeData = [
                     'method' => 'route_broadcast',
-                    'target_server' => $service
+                    'target_server' => $service,
+                    'msg' => $requestData['msg']
                 ];
                 go(function () use ($routeData) {
                     $cli = new \Swoole\Coroutine\Http\Client("0.0.0.0", 9600);
