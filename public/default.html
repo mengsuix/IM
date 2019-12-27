@@ -19,8 +19,10 @@
 	  <div class="chat-list">
 			  <select>
 				  <option value="all">所有人</option>
-				  <option value="192.168.10.23:9801:1">msx1</option>
-				  <option value="192.168.10.23:9802:2">msx2</option>
+				  <!--<option value="192.168.10.23:9801:1">msx1</option>-->
+				  <!--<option value="192.168.10.23:9802:2">msx2</option>-->
+				  <option value="37">msx37</option>
+				  <option value="92">msx92</option>
 			  </select>
 	   </div>
 </div>
@@ -60,7 +62,9 @@
          if(event.keyCode==13){ //按下了回车键
 			 var speak=$('.chat-window-message').val(); //输入框里的值
              var target=$('.chat-list select').val()
-             ws.send('{"method":"private_chat","target_url":"'+target+'","msg":'+speak+'}');
+             // ws.send('{"method":"private_chat","target_url":"'+target+'","msg":'+speak+'}');
+
+			 ws.send('{"method":"notice","uid":"'+target+'","msg":'+speak+'}');
 
 			 alert(target);
 			// ws.send(name+':'+speak); //消息发送到服务器

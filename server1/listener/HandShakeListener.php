@@ -24,7 +24,7 @@ class HandShakeListener
         $flag = 0;
         try {
             $tokenData = JWT::decode($request->header['sec-websocket-protocol'], 'msx123', ['HS256']);
-            $redis->hset('im_session', $tokenData->data->uid, json_encode(['fd' => $request->fd, 'name' => $tokenData->data->name]));
+            $redis->hset('im_session', $tokenData->data->uid, json_encode(['service_url' => $tokenData->data->service_url,'fd' => $request->fd, 'name' => $tokenData->data->name]));
             $table->set($request->fd, ['fd' => $request->fd, 'uid' => $tokenData->data->uid]);
         } catch (SignatureInvalidException $e) { //签名错误
             var_dump($e->getMessage());
